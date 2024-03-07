@@ -1,0 +1,73 @@
+def n_grams_analysis(tokens, n, skip_tokens=None, most=10):
+    '''
+    This function creates n-gram tokens, filters out specified tokens, performs analysis of n-grams,
+    and plots the frequencies of the most common n-grams.
+
+    :param tokens: list of word tokens
+    :param n: integer for the n-gram (e.g., 2 for bigrams, 3 for trigrams)
+    :param skip_tokens: list of tokens to be skipped (e.g., punctuation, specific words)
+    :return: FreqDist object with n-gram frequencies
+    '''
+    
+    if skip_tokens is None:
+        skip_tokens = []  # Default to an empty list if none provided
+
+    # Filter out unwanted tokens
+    filtered_tokens = [token for token in tokens if token not in skip_tokens]
+
+    # Create n-gram tokens
+    n_grams = ngrams(filtered_tokens, n)
+
+    # Filter out unwanted n-grams
+    filtered_n_grams = [n_gram for n_gram in n_grams if n_gram not in skip_tokens]
+
+    # Convert n-grams to a list and count the frequency of each n-gram
+    freq_dist = FreqDist(list(filtered_n_grams))
+
+    # Plot the most common n-grams
+    most_common_n_grams = freq_dist.most_common(most)
+    n_grams_str, frequencies = zip(*[(' '.join(gram), freq) for gram, freq in most_common_n_grams])
+
+
+
+    # Create the plot
+    plt.figure(figsize=(18, 10))
+    bars = plt.bar(n_grams_str, frequencies)
+    plt.xlabel('N-grams')
+    plt.ylabel('Frequency')
+    plt.title(f'Top 10 Most Common {n}-grams')
+    plt.xticks(rotation=45, ha="right")
+
+    # Adding frequencies on top of each bar
+    for bar in bars:
+        yval = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width() / 2, yval, yval, ha='center', va='bottom')
+
+    plt.show()
+
+    labels = n_grams_str
+    sizes = frequencies
+
+    # Combine labels and sizes for display
+    labels_with_freq = [f'{label}\n{size}' for label, size in zip(labels, sizes)]
+
+    colors = [plt.cm.Spectral(i/float(len(labels))) for i in range(len(labels))]
+
+    # Draw Plot
+    plt.figure(figsize=(18, 10), dpi=80)
+    squarify.plot(sizes=sizes, label=labels_with_freq, color=colors, alpha=.8)
+
+    # Decorate
+    plt.title(f'Top 10 Most Common {n}-grams')
+    plt.axis('off')
+    plt.show()
+    
+    return freq_dist
+
+# Define punctuation and words to skip
+skip_tokens = [',', '.', '..', '...', '*', ':', ';', '-', '--', '\"', '``', '`', '\'\'', 'Birinci', 'İkinci', 'Üçüncü', 'Dördüncü', 'Beşinci', 'ünc']
+freq_dist = n_grams_analysis(tokens, 1, skip_tokens=skip_tokens, most=100)
+freq_dist2 = n_grams_analysis(tokens, 2, skip_tokens=skip_tokens, most=100)
+freq_dist3 = n_grams_analysis(tokens, 3, skip_tokens=skip_tokens, most=100)
+freq_dist3 = n_grams_analysis(tokens, 4, skip_tokens=skip_tokens, most=100)
+freq_dist3 = n_grams_analysis(tokens, 5, skip_tokens=skip_tokens, most=100)
