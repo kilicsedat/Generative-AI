@@ -26,7 +26,7 @@ def n_grams_analysis(tokens, n, skip_tokens=None, most=10):
 
     # Plot the most common n-grams
     most_common_n_grams = freq_dist.most_common(most)
-    n_grams_str, frequencies = zip(*[(' '.join(gram), freq) for gram, freq in most_common_n_grams])
+    n_grams_string, frequencies = zip(*[(' '.join(gram), freq) for gram, freq in most_common_n_grams])
 
 
 
